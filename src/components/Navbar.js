@@ -9,12 +9,26 @@ import {
   Badge, 
   IconButton,
   InputBase,
-  Paper
+  Paper,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Divider,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 import { 
   ShoppingCart as CartIcon,
   Search as SearchIcon,
-  Clear as ClearIcon
+  Clear as ClearIcon,
+  Menu as MenuIcon,
+  Dashboard as DashboardIcon,
+  Logout as LogoutIcon,
+  ShoppingBasket as ShoppingBasketIcon,
+  Login as LoginIcon,
+  ArrowDownward as FooterIcon
 } from '@mui/icons-material';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { auth } from '../firebase';
@@ -29,6 +43,12 @@ const Navbar = ({ isAdmin, setIsAdmin, isCustomer, setIsCustomer, isSeller, setI
   const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated || !!auth.currentUser);
   const [searchFocused, setSearchFocused] = useState(false);
   const searchInputRef = useRef(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // Use MUI's useTheme and useMediaQuery hooks for responsive design
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   
   // Check if we're on the homepage
   const isHomePage = location.pathname === '/';
@@ -75,6 +95,11 @@ const Navbar = ({ isAdmin, setIsAdmin, isCustomer, setIsCustomer, isSeller, setI
         pathname: '/',
         search: `?search=${encodeURIComponent(searchTerm.trim())}`
       });
+      
+      // Close mobile menu if open
+      if (mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
     } else {
       // If empty search, clear the search param
       if (onSearch) {
@@ -124,6 +149,11 @@ const Navbar = ({ isAdmin, setIsAdmin, isCustomer, setIsCustomer, isSeller, setI
       setIsSeller(false);
       setIsLoggedIn(false);
       navigate('/');
+      
+      // Close mobile menu if open
+      if (mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
     } catch (error) {
       console.error('Error logging out:', error);
     }
@@ -154,6 +184,164 @@ const Navbar = ({ isAdmin, setIsAdmin, isCustomer, setIsCustomer, isSeller, setI
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  
+  // Function to scroll to footer
+  const scrollToFooter = () => {
+    const footerElement = document.getElementById('footer-section');
+    if (footerElement) {
+      footerElement.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // Fallback if ID doesn't work
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+    
+    // Close mobile menu if open
+    if (mobileMenuOpen) {
+      setMobileMenuOpen(false);
+    }
+  };
+  
+  // Mobile menu drawer content
+  const mobileMenuContent = (
+    <Box sx={{ width: 250 }} role="presentation">
+      <List>
+        <ListItem sx={{ justifyContent: 'center', py: 2 }}>
+          <Box
+            component="img"
+            src="https://th.bing.com/th/id/R.9ac86fdbff8d53b5aeaf6d2ba1711089?rik=qNffree61YfaOA&pid=ImgRaw&r=0"
+            alt="E-Commerce Logo"
+            sx={{
+              height: 50,
+              width: 'auto',
+              borderRadius: '8px'
+            }}
+          />
+        </ListItem>
+        <Divider />
+        
+        {isHomePage && (
+          <ListItem sx={{ mt: 1 }}>
+            <Paper
+              component="form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                submitSearch();
+              }}
+              sx={{
+                p: '2px 4px',
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                borderRadius: '20px',
+              }}
+            >
+              <InputBase
+                sx={{ ml: 1, flex: 1 }}
+                placeholder="Search products..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                onKeyPress={handleSearchSubmit}
+              />
+              {searchTerm && (
+                <IconButton 
+                  sx={{ p: '5px' }} 
+                  aria-label="clear search"
+                  onClick={handleClearSearch}
+                >
+                  <ClearIcon fontSize="small" />
+                </IconButton>
+              )}
+              <IconButton 
+                sx={{ p: '5px' }} 
+                aria-label="search"
+                onClick={handleSubmitSearch}
+              >
+                <SearchIcon fontSize="small" />
+              </IconButton>
+            </Paper>
+          </ListItem>
+        )}
+
+        {isAdmin && (
+          <>
+            <ListItem button onClick={() => {
+              navigate('/admin/dashboard');
+              setMobileMenuOpen(false);
+            }}>
+              <ListItemIcon><DashboardIcon /></ListItemIcon>
+              <ListItemText primary="Dashboard" />
+            </ListItem>
+          </>
+        )}
+        
+        {isCustomer && (
+          <>
+            <ListItem button onClick={() => {
+              navigate('/customer/dashboard');
+              setMobileMenuOpen(false);
+            }}>
+              <ListItemIcon><DashboardIcon /></ListItemIcon>
+              <ListItemText primary="My Dashboard" />
+            </ListItem>
+            <ListItem button onClick={() => {
+              navigate('/cart');
+              setMobileMenuOpen(false);
+            }}>
+              <ListItemIcon><CartIcon /></ListItemIcon>
+              <ListItemText primary="Cart" />
+            </ListItem>
+          </>
+        )}
+        
+        {isSeller && (
+          <ListItem button onClick={() => {
+            navigate('/seller/dashboard');
+            setMobileMenuOpen(false);
+          }}>
+            <ListItemIcon><StorefrontIcon /></ListItemIcon>
+            <ListItemText primary="Seller Dashboard" />
+          </ListItem>
+        )}
+        
+        {!isAdmin && !isCustomer && !isSeller && (
+          <>
+            <ListItem button onClick={() => {
+              navigate('/customer/login');
+              setMobileMenuOpen(false);
+            }}>
+              <ListItemIcon><LoginIcon /></ListItemIcon>
+              <ListItemText primary="Customer Login" />
+            </ListItem>
+            <ListItem button onClick={() => {
+              navigate('/seller/login');
+              setMobileMenuOpen(false);
+            }}>
+              <ListItemIcon><StorefrontIcon /></ListItemIcon>
+              <ListItemText primary="Seller Login" />
+            </ListItem>
+          </>
+        )}
+        
+        <Divider sx={{ my: 1 }} />
+        
+        <ListItem button onClick={scrollToFooter}>
+          <ListItemIcon><FooterIcon /></ListItemIcon>
+          <ListItemText primary="Footer" />
+        </ListItem>
+        
+        {(isAdmin || isCustomer || isSeller) && (
+          <ListItem button onClick={handleLogout}>
+            <ListItemIcon><LogoutIcon /></ListItemIcon>
+            <ListItemText primary="Logout" />
+          </ListItem>
+        )}
+      </List>
+    </Box>
+  );
 
   return (
     <AppBar position="fixed" sx={{ 
@@ -172,7 +360,8 @@ const Navbar = ({ isAdmin, setIsAdmin, isCustomer, setIsCustomer, isSeller, setI
       }
     }}>
       <Container>
-        <Toolbar sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Toolbar sx={{ display: 'flex', alignItems: 'center', gap: 2, p: { xs: 1, sm: 2 } }}>
+          {/* Logo and brand name */}
           <Box
             component="div"
             sx={{ 
@@ -190,7 +379,7 @@ const Navbar = ({ isAdmin, setIsAdmin, isCustomer, setIsCustomer, isSeller, setI
               src="https://th.bing.com/th/id/R.9ac86fdbff8d53b5aeaf6d2ba1711089?rik=qNffree61YfaOA&pid=ImgRaw&r=0"
               alt="E-Commerce Logo"
               sx={{
-                height: 40,
+                height: { xs: 35, sm: 40 },
                 width: 'auto',
                 mr: 1,
                 borderRadius: '8px',
@@ -201,21 +390,23 @@ const Navbar = ({ isAdmin, setIsAdmin, isCustomer, setIsCustomer, isSeller, setI
                 }
               }}
             />
-            <Typography 
-              variant="h6" 
-              component="div"
-              sx={{ 
-                color: 'white',
-                fontWeight: 600,
-                display: { xs: 'none', sm: 'block' }
-              }}
-            >
-DelightSphere Shopping Store
-            </Typography>
+            {!isMobile && (
+              <Typography 
+                variant="h6" 
+                component="div"
+                sx={{ 
+                  color: 'white',
+                  fontWeight: 600,
+                  fontSize: { sm: '1rem', md: '1.25rem' }
+                }}
+              >
+                DelightSphere Shopping Store
+              </Typography>
+            )}
           </Box>
 
-          {/* Search Bar - Only show on homepage */}
-          {isHomePage && (
+          {/* Search Bar - Only show on homepage and not on mobile */}
+          {isHomePage && !isMobile && (
             <Paper
               component="form"
               onSubmit={(e) => {
@@ -226,7 +417,7 @@ DelightSphere Shopping Store
                 p: '2px 4px',
                 display: 'flex',
                 alignItems: 'center',
-                width: { xs: 200, sm: 350, md: 450 },
+                width: { sm: 250, md: 350, lg: 450 },
                 mx: 2,
                 backgroundColor: 'rgba(255, 255, 255, 0.2)',
                 '&:hover': {
@@ -283,126 +474,146 @@ DelightSphere Shopping Store
 
           <Box sx={{ flexGrow: 1 }} />
           
-          {/* Footer link button */}
-          <Button 
-            color="inherit"
-            onClick={() => {
-              const footerElement = document.getElementById('footer-section');
-              if (footerElement) {
-                footerElement.scrollIntoView({ behavior: 'smooth' });
-              } else {
-                // Fallback if ID doesn't work
-                window.scrollTo({
-                  top: document.body.scrollHeight,
-                  behavior: 'smooth'
-                });
-              }
-            }}
-            sx={{ 
-              mr: 2, 
-              textTransform: 'none',
-              fontSize: '0.9rem',
-              fontWeight: 500,
-              opacity: 0.9,
-              '&:hover': {
-                opacity: 1,
-                transform: 'translateY(-2px)',
-              },
-              transition: 'all 0.2s ease'
-            }}
-          >
-            Footer
-          </Button>
+          {/* Desktop Navigation Links */}
+          {!isMobile && (
+            <>
+              {/* Footer link button */}
+              <Button 
+                color="inherit"
+                onClick={scrollToFooter}
+                sx={{ 
+                  mr: 2, 
+                  textTransform: 'none',
+                  fontSize: '0.9rem',
+                  fontWeight: 500,
+                  opacity: 0.9,
+                  '&:hover': {
+                    opacity: 1,
+                    transform: 'translateY(-2px)',
+                  },
+                  transition: 'all 0.2s ease',
+                  display: { xs: 'none', sm: 'block' }
+                }}
+              >
+                Footer
+              </Button>
+              
+              {isAdmin ? (
+                <Box sx={{ display: 'flex' }}>
+                  <Button color="inherit" onClick={() => navigate('/admin/dashboard')}>
+                    Dashboard
+                  </Button>
+                  <Button color="inherit" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                </Box>
+              ) : isCustomer ? (
+                <Box sx={{ display: 'flex' }}>
+                  <Button 
+                    color="inherit" 
+                    onClick={() => navigate('/customer/dashboard')}
+                    sx={{ display: { xs: 'none', md: 'block' } }}
+                  >
+                    My Dashboard
+                  </Button>
+                  <IconButton 
+                    color="inherit" 
+                    onClick={() => navigate('/cart')}
+                    sx={{ mr: 1 }}
+                  >
+                    <CartIcon />
+                  </IconButton>
+                  <Button color="inherit" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                </Box>
+              ) : isSeller ? (
+                <Box sx={{ display: 'flex' }}>
+                  <Button color="inherit" onClick={() => navigate('/seller/dashboard')}>
+                    Seller Dashboard
+                  </Button>
+                  <Button color="inherit" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                </Box>
+              ) : (
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Button 
+                    variant="contained"
+                    onClick={() => navigate('/customer/login')}
+                    sx={{ 
+                      background: 'linear-gradient(45deg, #ffffff 30%, #f5f5f5 90%)',
+                      color: '#1a237e',
+                      textTransform: 'none',
+                      fontSize: { xs: '0.8rem', sm: '0.9rem' },
+                      px: { xs: 1, sm: 2 },
+                      py: 0.5,
+                      borderRadius: '20px',
+                      boxShadow: '0 3px 5px 2px rgba(255, 255, 255, 0.3)',
+                      '&:hover': {
+                        background: 'linear-gradient(45deg, #f5f5f5 30%, #ffffff 90%)',
+                        transform: 'translateY(-2px)',
+                        boxShadow: '0 6px 10px 2px rgba(255, 255, 255, 0.4)',
+                      },
+                      transition: 'all 0.3s ease',
+                      fontWeight: 600,
+                      letterSpacing: 0.5,
+                      border: '1px solid rgba(255, 255, 255, 0.5)'
+                    }}
+                  >
+                    Customer Login
+                  </Button>
+                  <Button 
+                    variant="outlined"
+                    onClick={() => navigate('/seller/login')}
+                    sx={{ 
+                      color: '#ffffff',
+                      textTransform: 'none',
+                      fontSize: { xs: '0.8rem', sm: '0.9rem' },
+                      px: { xs: 1, sm: 2 },
+                      py: 0.5,
+                      borderRadius: '20px',
+                      border: '1px solid rgba(255, 255, 255, 0.7)',
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        transform: 'translateY(-2px)',
+                        boxShadow: '0 4px 8px rgba(255, 255, 255, 0.2)',
+                      },
+                      transition: 'all 0.3s ease',
+                      fontWeight: 600,
+                      letterSpacing: 0.5,
+                    }}
+                  >
+                    <StorefrontIcon sx={{ mr: 1, fontSize: 18 }} />
+                    Seller Login
+                  </Button>
+                </Box>
+              )}
+            </>
+          )}
           
-          {isAdmin ? (
-            <Box>
-              <Button color="inherit" onClick={() => navigate('/admin/dashboard')}>
-                Dashboard
-              </Button>
-              <Button color="inherit" onClick={handleLogout}>
-                Logout
-              </Button>
-            </Box>
-          ) : isCustomer ? (
-            <Box>
-              <Button color="inherit" onClick={() => navigate('/customer/dashboard')}>
-                My Dashboard
-              </Button>
-              <IconButton 
-                color="inherit" 
-                onClick={() => navigate('/cart')}
-                sx={{ mr: 1 }}
-              >
-                <CartIcon />
-              </IconButton>
-              <Button color="inherit" onClick={handleLogout}>
-                Logout
-              </Button>
-            </Box>
-          ) : isSeller ? (
-            <Box>
-              <Button color="inherit" onClick={() => navigate('/seller/dashboard')}>
-                Seller Dashboard
-              </Button>
-              <Button color="inherit" onClick={handleLogout}>
-                Logout
-              </Button>
-            </Box>
-          ) : (
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button 
-                variant="contained"
-                onClick={() => navigate('/customer/login')}
-                sx={{ 
-                  background: 'linear-gradient(45deg, #ffffff 30%, #f5f5f5 90%)',
-                  color: '#1a237e',
-                  textTransform: 'none',
-                  fontSize: '0.9rem',
-                  px: 2,
-                  py: 0.5,
-                  borderRadius: '20px',
-                  boxShadow: '0 3px 5px 2px rgba(255, 255, 255, 0.3)',
-                  '&:hover': {
-                    background: 'linear-gradient(45deg, #f5f5f5 30%, #ffffff 90%)',
-                    transform: 'translateY(-2px)',
-                    boxShadow: '0 6px 10px 2px rgba(255, 255, 255, 0.4)',
-                  },
-                  transition: 'all 0.3s ease',
-                  fontWeight: 600,
-                  letterSpacing: 0.5,
-                  border: '1px solid rgba(255, 255, 255, 0.5)'
-                }}
-              >
-                Customer Login
-              </Button>
-              <Button 
-                variant="outlined"
-                onClick={() => navigate('/seller/login')}
-                sx={{ 
-                  color: '#ffffff',
-                  textTransform: 'none',
-                  fontSize: '0.9rem',
-                  px: 2,
-                  py: 0.5,
-                  borderRadius: '20px',
-                  border: '1px solid rgba(255, 255, 255, 0.7)',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                    transform: 'translateY(-2px)',
-                    boxShadow: '0 4px 8px rgba(255, 255, 255, 0.2)',
-                  },
-                  transition: 'all 0.3s ease',
-                  fontWeight: 600,
-                  letterSpacing: 0.5,
-                }}
-              >
-                <StorefrontIcon sx={{ mr: 1, fontSize: 20 }} />
-                Seller Login
-              </Button>
-            </Box>
+          {/* Mobile menu hamburger icon */}
+          {isMobile && (
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="menu"
+              onClick={() => setMobileMenuOpen(true)}
+            >
+              <MenuIcon />
+            </IconButton>
           )}
         </Toolbar>
       </Container>
+      
+      {/* Mobile menu drawer */}
+      <Drawer
+        anchor="right"
+        open={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+      >
+        {mobileMenuContent}
+      </Drawer>
     </AppBar>
   );
 };
