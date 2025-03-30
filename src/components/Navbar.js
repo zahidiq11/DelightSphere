@@ -390,19 +390,18 @@ const Navbar = ({ isAdmin, setIsAdmin, isCustomer, setIsCustomer, isSeller, setI
                 }
               }}
             />
-            {!isMobile && (
-              <Typography 
-                variant="h6" 
-                component="div"
-                sx={{ 
-                  color: 'white',
-                  fontWeight: 600,
-                  fontSize: { sm: '1rem', md: '1.25rem' }
-                }}
-              >
-                DelightSphere Shopping Store
-              </Typography>
-            )}
+            <Typography 
+              variant="h6" 
+              component="div"
+              sx={{ 
+                color: 'white',
+                fontWeight: 600,
+                fontSize: { xs: '0.85rem', sm: '1rem', md: '1.25rem' },
+                display: 'block'
+              }}
+            >
+              DelightSphere Shopping Store
+            </Typography>
           </Box>
 
           {/* Search Bar - Only show on homepage and not on mobile */}
