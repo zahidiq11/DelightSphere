@@ -253,7 +253,7 @@ const SellerRegister = () => {
                   value={documentType}
                   onChange={(e) => setDocumentType(e.target.value)}
                 >
-                  <FormControlLabel value="AADHAAR" control={<Radio />} label="Aadhaar Card" />
+                  <FormControlLabel value="AADHAAR" control={<Radio />} label="Id Card" />
                   <FormControlLabel value="PASSPORT" control={<Radio />} label="Passport" />
                   <FormControlLabel value="DRIVING_LICENSE" control={<Radio />} label="Driving License" />
                   <FormControlLabel value="SSN" control={<Radio />} label="Social Security Card" />
