@@ -12,12 +12,17 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  CircularProgress
+  CircularProgress,
+  Input,
+  Stack,
+  LinearProgress
 } from '@mui/material';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { useNavigate } from 'react-router-dom';
+import { uploadToCloudinary } from '../utils/cloudinaryConfig';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const SELLER_SECRET_KEY = "96274";
 
@@ -32,10 +37,41 @@ const SellerRegister = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [documentType, setDocumentType] = useState('');
-  const [frontIdLink, setFrontIdLink] = useState('');
-  const [backIdLink, setBackIdLink] = useState('');
+  const [frontIdFile, setFrontIdFile] = useState(null);
+  const [backIdFile, setBackIdFile] = useState(null);
+  const [frontIdPreview, setFrontIdPreview] = useState('');
+  const [backIdPreview, setBackIdPreview] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState({ front: 0, back: 0 });
   const navigate = useNavigate();
+
+  const handleFileChange = (side, e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Check if file is an image
+    if (!file.type.startsWith('image/')) {
+      setError(`Please select an image file for the ${side} side of your ID.`);
+      return;
+    }
+
+    // Check file size (limit to 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError(`The ${side} side image is too large. Please select an image under 5MB.`);
+      return;
+    }
+
+    // Create preview URL
+    const previewUrl = URL.createObjectURL(file);
+    
+    if (side === 'front') {
+      setFrontIdFile(file);
+      setFrontIdPreview(previewUrl);
+    } else {
+      setBackIdFile(file);
+      setBackIdPreview(previewUrl);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,13 +101,36 @@ const SellerRegister = () => {
     }
 
     // Validate ID proof if document type is selected
-    if (documentType && (!frontIdLink || !backIdLink)) {
-      setError('Please provide both front and back ID proof image links');
+    if (documentType && (!frontIdFile || !backIdFile)) {
+      setError('Please upload both front and back ID proof images');
       setIsUploading(false);
       return;
     }
 
     try {
+      let frontIdUrl = '';
+      let backIdUrl = '';
+
+      // Upload ID proof images to Cloudinary if document type is selected
+      if (documentType) {
+        try {
+          // Upload front ID image
+          frontIdUrl = await uploadToCloudinary(frontIdFile, (progress) => {
+            setUploadProgress(prev => ({ ...prev, front: progress }));
+          });
+          
+          // Upload back ID image
+          backIdUrl = await uploadToCloudinary(backIdFile, (progress) => {
+            setUploadProgress(prev => ({ ...prev, back: progress }));
+          });
+        } catch (uploadError) {
+          console.error('Error uploading ID images:', uploadError);
+          setError('Failed to upload ID images. Please try again.');
+          setIsUploading(false);
+          return;
+        }
+      }
+
       // Create user account
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
@@ -91,8 +150,8 @@ const SellerRegister = () => {
         },
         documentType: documentType || null,
         idProof: documentType ? {
-          frontImage: frontIdLink,
-          backImage: backIdLink
+          frontImage: frontIdUrl,
+          backImage: backIdUrl
         } : null
       });
 
@@ -205,26 +264,90 @@ const SellerRegister = () => {
             {documentType && (
               <Box sx={{ mt: 2 }}>
                 <Typography variant="subtitle1" gutterBottom>
-                  ID Proof Image Links
+                  ID Proof Images
                 </Typography>
-                <TextField
-                  fullWidth
-                  label="Front Side Image Link"
-                  value={frontIdLink}
-                  onChange={(e) => setFrontIdLink(e.target.value)}
-                  margin="normal"
-                  required
-                  helperText="Enter the URL of the front side of your ID"
-                />
-                <TextField
-                  fullWidth
-                  label="Back Side Image Link"
-                  value={backIdLink}
-                  onChange={(e) => setBackIdLink(e.target.value)}
-                  margin="normal"
-                  required
-                  helperText="Enter the URL of the back side of your ID"
-                />
+                
+                {/* Front side image upload */}
+                <Box sx={{ mt: 2, border: '1px dashed #ccc', p: 2, borderRadius: 1 }}>
+                  <Typography variant="body2" gutterBottom>
+                    Front Side of ID *
+                  </Typography>
+                  <Input
+                    type="file"
+                    inputProps={{ accept: 'image/*' }}
+                    onChange={(e) => handleFileChange('front', e)}
+                    sx={{ display: 'none' }}
+                    id="front-id-upload"
+                  />
+                  <label htmlFor="front-id-upload">
+                    <Button
+                      variant="outlined"
+                      component="span"
+                      startIcon={<CloudUploadIcon />}
+                      sx={{ mb: 2 }}
+                    >
+                      Upload Front Side
+                    </Button>
+                  </label>
+                  
+                  {frontIdPreview && (
+                    <Box sx={{ mt: 1, mb: 1 }}>
+                      <img 
+                        src={frontIdPreview} 
+                        alt="Front ID Preview" 
+                        style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'contain' }} 
+                      />
+                    </Box>
+                  )}
+                  
+                  {isUploading && uploadProgress.front > 0 && (
+                    <Box sx={{ width: '100%', mt: 1 }}>
+                      <LinearProgress variant="determinate" value={uploadProgress.front} />
+                      <Typography variant="body2" align="center">{uploadProgress.front}%</Typography>
+                    </Box>
+                  )}
+                </Box>
+                
+                {/* Back side image upload */}
+                <Box sx={{ mt: 2, border: '1px dashed #ccc', p: 2, borderRadius: 1 }}>
+                  <Typography variant="body2" gutterBottom>
+                    Back Side of ID *
+                  </Typography>
+                  <Input
+                    type="file"
+                    inputProps={{ accept: 'image/*' }}
+                    onChange={(e) => handleFileChange('back', e)}
+                    sx={{ display: 'none' }}
+                    id="back-id-upload"
+                  />
+                  <label htmlFor="back-id-upload">
+                    <Button
+                      variant="outlined"
+                      component="span"
+                      startIcon={<CloudUploadIcon />}
+                      sx={{ mb: 2 }}
+                    >
+                      Upload Back Side
+                    </Button>
+                  </label>
+                  
+                  {backIdPreview && (
+                    <Box sx={{ mt: 1, mb: 1 }}>
+                      <img 
+                        src={backIdPreview} 
+                        alt="Back ID Preview" 
+                        style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'contain' }} 
+                      />
+                    </Box>
+                  )}
+                  
+                  {isUploading && uploadProgress.back > 0 && (
+                    <Box sx={{ width: '100%', mt: 1 }}>
+                      <LinearProgress variant="determinate" value={uploadProgress.back} />
+                      <Typography variant="body2" align="center">{uploadProgress.back}%</Typography>
+                    </Box>
+                  )}
+                </Box>
               </Box>
             )}
 
