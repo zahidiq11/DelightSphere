@@ -179,11 +179,9 @@ const Footer = () => {
         
         <Box sx={{ textAlign: 'center', opacity: 0.7 }}>
           <Typography variant="body2">
-            © {2017} Wayfa Store. All rights reserved.
+            © {2017} DelightSphere Shopping Store. All rights reserved.
           </Typography>
-          <Typography variant="caption" sx={{ display: 'block', mt: 1 }}>
-            Designed with ❤️ for a better shopping experience
-          </Typography>
+        
         </Box>
       </Container>
     </Box>
