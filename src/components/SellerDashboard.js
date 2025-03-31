@@ -4253,7 +4253,7 @@ const [toogle, setToogle] = useState(true)
 
       <Box
         component="nav"
-        className={`md:w-64 ${toogle ? 'block' : 'hidden'} fixed top-0 left-0  h-full bg-gradient-to-b from-[#1a237e] to-[#303f9f] text-white overflow-y-auto shadow-lg flex flex-col z-50`}
+        className={`md:w-64 ${toogle ? 'block' : 'hidden'} mt-12 fixed top-0 left-0  h-full bg-gradient-to-b from-[#1a237e] to-[#303f9f] text-white overflow-y-auto shadow-lg flex flex-col z-50`}
         style={{
           // Add custom styles that aren't available in Tailwind
           boxShadow: "2px 0 20px rgba(0, 0, 0, 0.2)",
