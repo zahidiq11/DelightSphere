@@ -15,7 +15,13 @@ import {
   CircularProgress,
   Input,
   Stack,
-  LinearProgress
+  LinearProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  CheckCircleOutline
 } from '@mui/material';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
@@ -23,6 +29,7 @@ import { auth, db } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import { uploadToCloudinary } from '../utils/cloudinaryConfig';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const SELLER_SECRET_KEY = "96274";
 
@@ -43,6 +50,7 @@ const SellerRegister = () => {
   const [backIdPreview, setBackIdPreview] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({ front: 0, back: 0 });
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleFileChange = (side, e) => {
@@ -71,6 +79,11 @@ const SellerRegister = () => {
       setBackIdFile(file);
       setBackIdPreview(previewUrl);
     }
+  };
+
+  const handleCloseSuccessDialog = () => {
+    setSuccessDialogOpen(false);
+    navigate('/seller/login');
   };
 
   const handleSubmit = async (e) => {
@@ -155,10 +168,8 @@ const SellerRegister = () => {
         } : null
       });
 
-      setSuccess('Registration submitted! Waiting for admin approval. You will be notified via email.');
-      setTimeout(() => {
-        navigate('/seller/login');
-      }, 2000);
+      // Show success message in popup dialog instead of alert
+      setSuccessDialogOpen(true);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -176,11 +187,6 @@ const SellerRegister = () => {
           {error && (
             <Alert severity="error" sx={{ mb: 2 }}>
               {error}
-            </Alert>
-          )}
-          {success && (
-            <Alert severity="success" sx={{ mb: 2 }}>
-              {success}
             </Alert>
           )}
           <form onSubmit={handleSubmit}>
@@ -388,6 +394,45 @@ const SellerRegister = () => {
           </form>
         </Paper>
       </Box>
+
+      {/* Success Dialog Popup */}
+      <Dialog
+        open={successDialogOpen}
+        onClose={handleCloseSuccessDialog}
+        aria-labelledby="success-dialog-title"
+        aria-describedby="success-dialog-description"
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            maxWidth: 450
+          }
+        }}
+      >
+        <DialogTitle id="success-dialog-title" sx={{ textAlign: 'center', pt: 3 }}>
+          <CheckCircleOutlineIcon color="success" sx={{ fontSize: 64, mb: 1 }} />
+          <Typography variant="h5" component="div">
+            Registration Successful
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="success-dialog-description" sx={{ textAlign: 'center', px: 2 }}>
+            Registration submitted! Waiting for admin approval. you account will be activated after 10 minutes.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'center', pb: 3 }}>
+          <Button 
+            onClick={handleCloseSuccessDialog} 
+            variant="contained" 
+            autoFocus
+            sx={{ 
+              minWidth: 120,
+              borderRadius: 6
+            }}
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
