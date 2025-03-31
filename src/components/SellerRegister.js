@@ -225,7 +225,7 @@ const SellerRegister = () => {
             />
             <TextField
               fullWidth
-              label="Secret Key"
+              label="Invitation Code"
               type="password"
               value={secretKey}
               onChange={(e) => setSecretKey(e.target.value)}
