@@ -4207,7 +4207,7 @@ const [toogle, setToogle] = useState(true)
     <Box sx={{ display: "flex", height: "100vh" }}>
       {/* Sidebar */}
 
-      <button className='absolute z-20 top-16 mt-1 left-3 flex items-start box-border justify-center px-3 py-1  rounded-lg bg-custom-blue text-white ' onClick={() => setToogle(!toogle)}>
+      <button className='absolute z-20 top-16 mt-3 left-3 flex items-start box-border justify-center px-3 py-1  rounded-lg bg-custom-blue text-white ' onClick={() => setToogle(!toogle)}>
                            
       <div className="flex items-center">
     {/* Hamburger/drawer icon using CSS */}
