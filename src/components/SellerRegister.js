@@ -416,7 +416,8 @@ const SellerRegister = () => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="success-dialog-description" sx={{ textAlign: 'center', px: 2 }}>
-            Registration submitted! Waiting for admin approval. you account will be activated after 10 minutes.
+            Your request for approval has been submitted.Please try to login after 10 minutes.
+
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center', pb: 3 }}>
