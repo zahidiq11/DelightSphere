@@ -206,7 +206,7 @@ const Navbar = ({ isAdmin, setIsAdmin, isCustomer, setIsCustomer, isSeller, setI
   
   // Mobile menu drawer content
   const mobileMenuContent = (
-    <Box sx={{ width: 250 }} role="presentation">
+    <Box className='mt-12' sx={{ width: 250 }} role="presentation">
       <List>
         <ListItem sx={{ justifyContent: 'center', py: 2 }}>
           <Box
