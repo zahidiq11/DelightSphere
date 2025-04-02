@@ -170,6 +170,7 @@ const HomePage = ({ isAuthenticated, searchTerm }) => {
       }
     ];
     
+    // Update the placeholder images arrays with more reliable URLs
     // Better placeholder images with category matching
     const placeholderImages = [
       // Home Appliances - 20 unique images
@@ -964,10 +965,25 @@ const HomePage = ({ isAuthenticated, searchTerm }) => {
                     )}
                     <CardMedia
                       component="img"
-                      height="200"
+                      height="250"
                       image={product.imageUrl}
                       alt={product.name}
-                      sx={{ objectFit: 'cover' }}
+                      sx={{ 
+                        objectFit: 'cover',
+                        width: '100%',
+                        height: 250,
+                        backgroundColor: '#f5f5f5',
+                        aspectRatio: '1/1',
+                        objectPosition: 'center',
+                        display: 'block',
+                        position: 'relative',
+                        '& img': {
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          objectPosition: 'center'
+                        }
+                      }}
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = product.fallbackImage || DEFAULT_FALLBACK_IMAGE;
@@ -1065,10 +1081,25 @@ const HomePage = ({ isAuthenticated, searchTerm }) => {
                   >
                     <CardMedia
                       component="img"
-                      height="200"
+                      height="250"
                       image={product.imageUrl || DEFAULT_FALLBACK_IMAGE}
                       alt={product.name}
-                      sx={{ objectFit: 'cover' }}
+                      sx={{ 
+                        objectFit: 'cover',
+                        width: '100%',
+                        height: 250,
+                        backgroundColor: '#f5f5f5',
+                        aspectRatio: '1/1',
+                        objectPosition: 'center',
+                        display: 'block',
+                        position: 'relative',
+                        '& img': {
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          objectPosition: 'center'
+                        }
+                      }}
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = DEFAULT_FALLBACK_IMAGE;
