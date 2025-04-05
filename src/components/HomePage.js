@@ -112,7 +112,17 @@ const HomePage = ({ isAuthenticated, searchTerm }) => {
           id: `ha-${i + 1}`,
           name: `${['Premium', 'Deluxe', 'Smart', 'Classic', 'Ultra'][i % 5]} ${['Blender', 'Coffee Maker', 'Toaster', 'Microwave', 'Vacuum', 'Air Purifier', 'Rice Cooker', 'Washing Machine', 'Refrigerator', 'Dishwasher'][i % 10]}`,
           description: `High-quality home appliance for modern living. Energy efficient and sleek design.`,
-          price: Math.floor(80 + Math.random() * 300),
+          price: i % 10 === 9 && i % 5 === 4 ? 78 : 
+                 i % 10 === 7 && i % 5 === 2 ? 87 : // Set price to 87 for 'Smart Washing Machine'
+                 i % 10 === 1 && i % 5 === 1 ? 56 : // Set price to 56 for 'Deluxe Coffee Maker'
+                 i % 10 === 2 && i % 5 === 2 ? 59 : // Set price to 59 for 'Smart Toaster'
+                 i % 10 === 3 && i % 5 === 3 ? 68 : // Set price to 68 for 'Classic Microwave'
+                 i % 10 === 4 && i % 5 === 4 ? 52 : // Set price to 52 for 'Ultra Vacuum'
+                 i % 10 === 5 && i % 5 === 0 ? 57 : // Set price to 57 for 'Premium Air Purifier'
+                 i % 10 === 6 && i % 5 === 1 ? 76 : // Set price to 76 for 'Deluxe Rice Cooker'
+                 i % 10 === 8 && i % 5 === 3 ? 65 : // Set price to 65 for 'Classic Refrigerator'
+                 i % 10 === 0 && i % 5 === 0 ? 44 : // Set price to 44 for 'Premium Blender'
+                 Math.floor(80 + Math.random() * 300),
           imageUrl: `/images/home-appliance-${(i % 5) + 1}.jpg`,
           category: 'Home Appliances',
           uniqueKey: `sample-ha-${i}`,
@@ -128,7 +138,17 @@ const HomePage = ({ isAuthenticated, searchTerm }) => {
           id: `el-${i + 1}`,
           name: `${['Pro', 'Ultra', 'Max', 'Lite', 'Elite'][i % 5]} ${['Laptop', 'Smartphone', 'Tablet', 'Headphones', 'Speaker', 'Monitor', 'Keyboard', 'Mouse', 'Camera', 'TV'][i % 10]}`,
           description: `Cutting-edge electronics with the latest technology and features.`,
-          price: Math.floor(150 + Math.random() * 500),
+          price: i % 10 === 0 && i % 5 === 0 ? 45 : // Set price to 45 for 'Pro Laptop'
+                 i % 10 === 1 && i % 5 === 1 ? 65 : // Set price to 65 for 'Ultra Smartphone'
+                 i % 10 === 2 && i % 5 === 2 ? 58 : // Set price to 58 for 'Max Tablet'
+                 i % 10 === 3 && i % 5 === 3 ? 78 : // Set price to 78 for 'Lite Headphones'
+                 i % 10 === 4 && i % 5 === 4 ? 33 : // Set price to 33 for 'Elite Speaker'
+                 i % 10 === 5 && i % 5 === 0 ? 45 : // Set price to 45 for 'Pro Monitor'
+                 i % 10 === 6 && i % 5 === 1 ? 77 : // Set price to 77 for 'Ultra Keyboard'
+                 i % 10 === 7 && i % 5 === 2 ? 67 : // Set price to 67 for 'Max Mouse'
+                 i % 10 === 8 && i % 5 === 3 ? 56 : // Set price to 56 for 'Lite Camera'
+                 i % 10 === 9 && i % 5 === 4 ? 65 : // Set price to 65 for 'Elite TV'
+                 Math.floor(150 + Math.random() * 500),
           imageUrl: `/images/electronics-${(i % 5) + 1}.jpg`,
           category: 'Electronics',
           uniqueKey: `sample-el-${i}`,
@@ -175,21 +195,21 @@ const HomePage = ({ isAuthenticated, searchTerm }) => {
     const placeholderImages = [
       // Home Appliances - 20 unique images
       [
-        'https://images.pexels.com/photos/1080721/pexels-photo-1080721.jpeg?auto=compress&cs=tinysrgb&w=300', // coffee maker
-        'https://images.pexels.com/photos/6758773/pexels-photo-6758773.jpeg?auto=compress&cs=tinysrgb&w=300', // blender
-        'https://images.pexels.com/photos/4495798/pexels-photo-4495798.jpeg?auto=compress&cs=tinysrgb&w=300', // microwave
-        'https://images.pexels.com/photos/4107142/pexels-photo-4107142.jpeg?auto=compress&cs=tinysrgb&w=300', // air purifier
-        'https://images.pexels.com/photos/3780689/pexels-photo-3780689.jpeg?auto=compress&cs=tinysrgb&w=300', // toaster
-        'https://images.pexels.com/photos/279810/pexels-photo-279810.jpeg?auto=compress&cs=tinysrgb&w=300', // washing machine
+        'https://www.anex.pk/cdn/shop/files/AG-825-Deluxe-Coffee-Maker.jpg?v=1719319592', // coffee maker
+        'https://sonellmart.co.ke/wp-content/uploads/2023/11/1.9.jpg', // blender
+        'https://pak-electronics.pk/wp-content/uploads/2024/06/Dawlance-MD-4N.jpg', // microwave
+        'https://whitehouse.com.pk/wp-content/uploads/2024/03/61gEq4cCWzL._AC_SX679_.jpg', // air purifier
+        'https://revcook.com/cdn/shop/files/TripleLift_r180_1200x1200_0002_3_c6022db5-b5c4-4a9f-92c4-9a1e53126e50.jpg?crop=center&height=1200&v=1728319911&width=1200', // toaster
+        'https://are.com.pk/wp-content/uploads/2023/12/1_fec00884-8ea3-4c26-aee0-08f0f6ec3d82_700x-1-600x600-1.webp', // washing machine
         'https://images.pexels.com/photos/3637728/pexels-photo-3637728.jpeg?auto=compress&cs=tinysrgb&w=300', // refrigerator
-        'https://images.pexels.com/photos/2451264/pexels-photo-2451264.jpeg?auto=compress&cs=tinysrgb&w=300', // dishwasher
-        'https://images.pexels.com/photos/4108730/pexels-photo-4108730.jpeg?auto=compress&cs=tinysrgb&w=300', // vacuum
-        'https://images.pexels.com/photos/7045379/pexels-photo-7045379.jpeg?auto=compress&cs=tinysrgb&w=300', // rice cooker
+        'https://yasirelectronics.com/wp-content/uploads/2024/03/Ariston-Free-standing-Dishwasher-LFC3C33WFXUK-600x600.jpg', // dishwasher
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQM7pYIomV5waLLBNdAabJlJs4E2PbeTTf5ug&s', // vacuum
+        'https://www.anex.pk/cdn/shop/files/Rice_Cooker_AG-2021_1.jpg?v=1722839324', // rice cooker
         'https://images.pexels.com/photos/5824883/pexels-photo-5824883.jpeg?auto=compress&cs=tinysrgb&w=300', // electric kettle
         'https://images.pexels.com/photos/5824527/pexels-photo-5824527.jpeg?auto=compress&cs=tinysrgb&w=300', // food processor
         'https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg?auto=compress&cs=tinysrgb&w=300', // mixer
-        'https://images.pexels.com/photos/4108305/pexels-photo-4108305.jpeg?auto=compress&cs=tinysrgb&w=300', // juicer
-        'https://images.pexels.com/photos/5825402/pexels-photo-5825402.jpeg?auto=compress&cs=tinysrgb&w=300', // oven
+        'https://images.pexels.com/photos/4108305/pexels-photo-4108305.jpeg?auto=compress&cs=tinysrgb&w=300', // juicer`
+        'https://pak-electronics.pk/wp-content/uploads/2024/06/Dawlance-MD-4N.jpg', // oven
         'https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?auto=compress&cs=tinysrgb&w=300', // fan
         'https://images.pexels.com/photos/7048043/pexels-photo-7048043.jpeg?auto=compress&cs=tinysrgb&w=300', // iron
         'https://images.pexels.com/photos/5824905/pexels-photo-5824905.jpeg?auto=compress&cs=tinysrgb&w=300', // pressure cooker
@@ -201,11 +221,11 @@ const HomePage = ({ isAuthenticated, searchTerm }) => {
         'https://images.pexels.com/photos/1029757/pexels-photo-1029757.jpeg?auto=compress&cs=tinysrgb&w=300', // laptop
         'https://images.pexels.com/photos/404280/pexels-photo-404280.jpeg?auto=compress&cs=tinysrgb&w=300', // smartphone
         'https://images.pexels.com/photos/3945683/pexels-photo-3945683.jpeg?auto=compress&cs=tinysrgb&w=300', // tablet
-        'https://images.pexels.com/photos/6636463/pexels-photo-6636463.jpeg?auto=compress&cs=tinysrgb&w=300', // headphones
-        'https://images.pexels.com/photos/577769/pexels-photo-577769.jpeg?auto=compress&cs=tinysrgb&w=300', // speakers
-        'https://images.pexels.com/photos/1334597/pexels-photo-1334597.jpeg?auto=compress&cs=tinysrgb&w=300', // monitor
-        'https://images.pexels.com/photos/3937174/pexels-photo-3937174.jpeg?auto=compress&cs=tinysrgb&w=300', // keyboard
-        'https://images.pexels.com/photos/5082579/pexels-photo-5082579.jpeg?auto=compress&cs=tinysrgb&w=300', // mouse
+        'https://allmytech.pk/wp-content/uploads/2024/10/61ekaGlWdhL._AC_SL1500_-716x1024.jpg-1.webp', // headphones
+        'https://m.media-amazon.com/images/I/71337XbSNdL._AC_SL1500_.jpg', // speaker
+        'https://static3.webx.pk/files/4012/Images/1-4012-1832577-100823055139504.jpg', // monitor
+        'https://ugreenpk.com/wp-content/uploads/2025/01/UGREEN-15258-Ultra-Slim-Wireless-Keyboard-Bluetooth-5.0-2.4G.webp', // keyboard
+        'https://pakbyte.pk/cdn/shop/files/Bloody_W95_Max_Mouse_1.jpg?v=1726851441', // mouse
         'https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?auto=compress&cs=tinysrgb&w=300', // camera
         'https://images.pexels.com/photos/333984/pexels-photo-333984.jpeg?auto=compress&cs=tinysrgb&w=300', // tv
         'https://images.pexels.com/photos/1649771/pexels-photo-1649771.jpeg?auto=compress&cs=tinysrgb&w=300', // gaming console
@@ -221,37 +241,37 @@ const HomePage = ({ isAuthenticated, searchTerm }) => {
       ],
       // Fashion - 20 unique images
       [
-        'https://images.pexels.com/photos/5868722/pexels-photo-5868722.jpeg?auto=compress&cs=tinysrgb&w=300', // men's t-shirt
-        'https://images.pexels.com/photos/934063/pexels-photo-934063.jpeg?auto=compress&cs=tinysrgb&w=300', // women's dress
-        'https://images.pexels.com/photos/2529157/pexels-photo-2529157.jpeg?auto=compress&cs=tinysrgb&w=300', // men's jeans
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2hBoY_nCf0d014am1sNHDrPKe2740xp_QEg&s', // men's t-shirt
+        'https://5.imimg.com/data5/SELLER/Default/2024/9/452918767/IT/TY/IA/12678962/humtum-2-men-and-women-matching-dress-500x500.jpg', // women's dress
+        'https://img.drz.lazcdn.com/static/pk/p/1d4d392110dab51913150ef751ebf5b5.jpg_960x960q80.jpg_.webp', // men's jeans
         'https://images.pexels.com/photos/6310924/pexels-photo-6310924.jpeg?auto=compress&cs=tinysrgb&w=300', // women's shoes
-        'https://images.pexels.com/photos/6347546/pexels-photo-6347546.jpeg?auto=compress&cs=tinysrgb&w=300', // men's watch
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhxsi3rShMF16VG4BtIC710r1w6mL60YZEtw&s', // men's watch
         'https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=300', // women's jacket
-        'https://images.pexels.com/photos/45982/pexels-photo-45982.jpeg?auto=compress&cs=tinysrgb&w=300', // men's sunglasses
+        'https://m.media-amazon.com/images/I/41wbOTAI+GL._AC_UY1100_.jpg', // men's sunglasses
         'https://images.pexels.com/photos/1204464/pexels-photo-1204464.jpeg?auto=compress&cs=tinysrgb&w=300', // women's bag
         'https://images.pexels.com/photos/984619/pexels-photo-984619.jpeg?auto=compress&cs=tinysrgb&w=300', // men's hat
         'https://images.pexels.com/photos/1078958/pexels-photo-1078958.jpeg?auto=compress&cs=tinysrgb&w=300', // women's scarf
-        'https://images.pexels.com/photos/298863/pexels-photo-298863.jpeg?auto=compress&cs=tinysrgb&w=300', // men's suit
-        'https://images.pexels.com/photos/1558906/pexels-photo-1558906.jpeg?auto=compress&cs=tinysrgb&w=300', // women's blouse
+        '', // men's suit
+        '', // women's blouse
         'https://images.pexels.com/photos/267301/pexels-photo-267301.jpeg?auto=compress&cs=tinysrgb&w=300', // men's shoes
-        'https://images.pexels.com/photos/322207/pexels-photo-322207.jpeg?auto=compress&cs=tinysrgb&w=300', // women's jewelry
-        'https://images.pexels.com/photos/3755706/pexels-photo-3755706.jpeg?auto=compress&cs=tinysrgb&w=300', // men's blazer
-        'https://images.pexels.com/photos/1126993/pexels-photo-1126993.jpeg?auto=compress&cs=tinysrgb&w=300', // women's hat
-        'https://images.pexels.com/photos/1232459/pexels-photo-1232459.jpeg?auto=compress&cs=tinysrgb&w=300', // men's belt
+        '', // women's jewelry
+        '', // men's jacket/blazer
+        '', // women's hat
+        '', // men's belt
         'https://images.pexels.com/photos/934673/pexels-photo-934673.jpeg?auto=compress&cs=tinysrgb&w=300', // women's sunglasses
-        'https://images.pexels.com/photos/6311387/pexels-photo-6311387.jpeg?auto=compress&cs=tinysrgb&w=300', // men's sneakers
+        '', // men's sneakers
         'https://images.pexels.com/photos/6046183/pexels-photo-6046183.jpeg?auto=compress&cs=tinysrgb&w=300'  // women's sweater
       ],
       // Toys - 20 unique images
       [
-        'https://images.pexels.com/photos/163036/mario-luigi-yoschi-figures-163036.jpeg?auto=compress&cs=tinysrgb&w=300', // action figures
-        'https://images.pexels.com/photos/207891/pexels-photo-207891.jpeg?auto=compress&cs=tinysrgb&w=300', // building blocks
-        'https://images.pexels.com/photos/12211/pexels-photo-12211.jpeg?auto=compress&cs=tinysrgb&w=300', // board game
-        'https://images.pexels.com/photos/3662833/pexels-photo-3662833.jpeg?auto=compress&cs=tinysrgb&w=300', // puzzle
-        'https://images.pexels.com/photos/1166473/pexels-photo-1166473.jpeg?auto=compress&cs=tinysrgb&w=300', // RC car
-        'https://images.pexels.com/photos/1619841/pexels-photo-1619841.jpeg?auto=compress&cs=tinysrgb&w=300', // doll
+        'https://m.media-amazon.com/images/I/61lX3YSdxsL.jpg', // action figures
+        'https://www.educationaltoys.pk/wp-content/uploads/2020/07/1000-pcs-diy-building-blocks.jpg', // building blocks
+        'https://cdn.thewirecutter.com/wp-content/media/2024/11/BEST-BOARD-GAMES-2048px-DSC9916.jpg?auto=webp&quality=75&width=1024', // board game
+        'https://img.drz.lazcdn.com/static/pk/p/8cf16a4a7b4366803a4fc3e8ce2745a4.jpg_720x720q80.jpg', // puzzle
+        'https://gift4u.pk/wp-content/uploads/2024/09/Remote-Control-Crystal-Classic-Car-2.webp', // RC car
+        'https://m.media-amazon.com/images/I/81K5fCgOgjL.jpg', // doll
         'https://images.pexels.com/photos/1319572/pexels-photo-1319572.jpeg?auto=compress&cs=tinysrgb&w=300', // plush toy
-        'https://images.pexels.com/photos/2088233/pexels-photo-2088233.jpeg?auto=compress&cs=tinysrgb&w=300', // science kit
+        'https://m.media-amazon.com/images/I/81gyDWDTc8L.jpg', // science kit
         'https://images.pexels.com/photos/159579/crayons-coloring-book-coloring-book-159579.jpeg?auto=compress&cs=tinysrgb&w=300', // art set
         'https://images.pexels.com/photos/2599244/pexels-photo-2599244.jpeg?auto=compress&cs=tinysrgb&w=300', // robot
         'https://images.pexels.com/photos/4134784/pexels-photo-4134784.jpeg?auto=compress&cs=tinysrgb&w=300', // dinosaur toy
@@ -375,7 +395,23 @@ const HomePage = ({ isAuthenticated, searchTerm }) => {
         return {
           ...product,
           imageUrl: placeholderImages[catIndex][imageIndex],
-          fallbackImage: defaultFallbackImage
+          fallbackImage: defaultFallbackImage,
+          // Exclude Premium Men's Jacket and Casual Men's Bag from display
+          hidden: (productType.includes('jacket') && product.name.toLowerCase().includes('premium men')) || 
+                  (productType.includes('bag') && product.name.toLowerCase().includes('casual men')),
+          // Change Classic Men's Scarf to Women Shoes with price $66
+          name: productType.includes('scarf') && product.name.toLowerCase().includes('men') ? 
+                "Women Shoes" : product.name,
+          price: productType.includes('scarf') && product.name.toLowerCase().includes('men') ? 66 :
+                 (productType.includes('sunglasses') && product.name.toLowerCase().includes('elegant women')) ? 56 :
+                 (productType.includes('bag') && product.name.toLowerCase().includes('casual women')) ? 65 :
+                 // Add toy product price conditions
+                 (productType.includes('building blocks') && product.name.toLowerCase().includes('educational')) ? 56 :
+                 (productType.includes('action figure') && product.name.toLowerCase().includes('interactive')) ? 43 :
+                 (productType.includes('board game') && product.name.toLowerCase().includes('creative')) ? 76 :
+                 (productType.includes('puzzle') && product.name.toLowerCase().includes('adventure')) ? 57 :
+                 (productType.includes('remote control car') && product.name.toLowerCase().includes('classic')) ? 44 :
+                 product.price
         };
       })
     }));
@@ -901,7 +937,7 @@ const HomePage = ({ isAuthenticated, searchTerm }) => {
               </Typography>
             </Box>
             <Grid container spacing={3}>
-              {currentCategoryProducts.map((product) => (
+              {currentCategoryProducts.filter(product => !product.hidden).map((product) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={product.uniqueKey}>
                   <Card 
                     sx={{ 
@@ -1059,7 +1095,7 @@ const HomePage = ({ isAuthenticated, searchTerm }) => {
           </Box>
         ) : (
           <Grid container spacing={3}>
-            {displayProductsWithKeys.map((product) => {
+            {displayProductsWithKeys.filter(product => !product.hidden).map((product) => {
               return (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={product.uniqueKey}>
                   <Card 
