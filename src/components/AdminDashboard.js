@@ -1359,9 +1359,9 @@ const AdminDashboard = () => {
       
       // Initialize an array to collect all product IDs from all sellers
       let allProductIds = [];
-      let sellerMap = {};
+      let sellerProductMap = {}; // Maps productId to an array of sellers that have it
       
-      // Collect all product IDs and build a seller lookup map
+      // Collect all product IDs and build a seller-product map
       sellersSnapshot.docs.forEach(sellerDoc => {
         const sellerData = {
           id: sellerDoc.id,
@@ -1373,14 +1373,18 @@ const AdminDashboard = () => {
           // Add product IDs to the collection list
           allProductIds = [...allProductIds, ...sellerData.products];
           
-          // Map each product ID to its seller
+          // Map each product ID to an array of sellers
           sellerData.products.forEach(productId => {
-            sellerMap[productId] = {
+            if (!sellerProductMap[productId]) {
+              sellerProductMap[productId] = [];
+            }
+            
+            sellerProductMap[productId].push({
               id: sellerData.id,
               name: sellerData.name || 'Unnamed Seller',
               shopName: sellerData.shopName || 'Unnamed Shop',
               email: sellerData.email || 'No email'
-            };
+            });
           });
         }
       });
@@ -1403,11 +1407,15 @@ const AdminDashboard = () => {
       if (sellersCache && Object.keys(sellersCache).length > 0) {
         uniqueProductIds.forEach(productId => {
           if (sellersCache[productId]) {
-            // Use cached product data
-            cachedResults.push({
-              ...sellersCache[productId],
-              seller: sellerMap[productId]
-            });
+            // For each seller of this product, create a separate entry
+            if (sellerProductMap[productId]) {
+              sellerProductMap[productId].forEach(seller => {
+                cachedResults.push({
+                  ...sellersCache[productId],
+                  seller: seller
+                });
+              });
+            }
           } else {
             // Need to fetch this product
             productsToBeFetched.push(productId);
@@ -1440,7 +1448,7 @@ const AdminDashboard = () => {
             const productId = productDoc.id;
             const productData = productDoc.data();
             
-            if (sellerMap[productId]) {
+            if (sellerProductMap[productId]) {
               // Store in the cache
               setSellersCache(prev => ({
                 ...prev,
@@ -1450,11 +1458,13 @@ const AdminDashboard = () => {
                 }
               }));
               
-              // Add to results
-              productResults.push({
-                id: productId,
-                ...productData,
-                seller: sellerMap[productId]
+              // Add one entry for each seller that has this product
+              sellerProductMap[productId].forEach(seller => {
+                productResults.push({
+                  id: productId,
+                  ...productData,
+                  seller: seller
+                });
               });
             }
           });
@@ -4450,7 +4460,7 @@ const AdminDashboard = () => {
             <List>
 
             <div className='w-full relative h-10'>
-                <button className='absolute left-3 flex items-start box-border justify-center px-3 py-1  rounded-lg bg-custom-blue text-white ' onClick={() => setToogle(!toogle)}>
+                <button className='absolute left-3 mt-1 flex items-start box-border justify-center px-3 py-1  rounded-lg bg-custom-blue text-white ' onClick={() => setToogle(!toogle)}>
                   X
                 </button>
               </div>
